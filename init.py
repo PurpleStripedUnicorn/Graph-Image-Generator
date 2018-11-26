@@ -148,4 +148,4 @@ if mode == "parametric":
     grid = draw_formula(grid, data)
 
     # show image
-    gen_image(grid, "RGB", "out.png")
+    gen_image(grid, "RGB", "out/main.png")
