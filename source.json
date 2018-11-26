@@ -3,15 +3,15 @@
     "type": "parametric",
 
     "window": {
-        "x": { "min": -1.5, "max": 1.5 },
-        "y": { "min": -1.5, "max": 1.5 },
+        "x": { "min": -10, "max": 10 },
+        "y": { "min": -10, "max": 10 },
         "t": { "min": -10, "max": 10, "step": 0.002 },
         "resolution": { "x": 400, "y": 400 }
     },
 
     "graph": {
-        "x": "0.5 * cos(t) + 0.7 * cos(t*10)",
-        "y": "0.5 * sin(t) + 0.7 * sin(t*10)"
+        "x": "5 * cos(t) + cos(t*5)",
+        "y": "5 * sin(t) + sin(t*5)"
     },
 
     "colors": {
