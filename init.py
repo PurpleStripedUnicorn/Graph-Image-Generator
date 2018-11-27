@@ -63,6 +63,38 @@ def draw_formula (grid, data):
 
     return grid
 
+def add_image (grid, filename, name, color, x, y, scale = 1):
+
+    # get image data as array
+    ndata = getjson("imagedata/" + filename + ".json")[name]
+
+    for i in range(0, len(ndata[0])):
+        for j in range(0, len(ndata)):
+            if ndata[j][i] == 1:
+                for ii in range(0, scale):
+                    for jj in range(0, scale):
+                        xc = i * scale + x + ii
+                        yc = j * scale + y + jj
+                        if xc < len(grid[0]) and xc >= 0 and yc < len(grid) and yc >= 0:
+                            grid[yc][xc] = color
+
+    return grid
+
+def add_text (grid, text, x, y):
+
+    n = 0
+    m = 0
+    for t in text:
+        if t != "\n":
+            grid = add_image (grid, "text", t, (0,0,0), x + 8 * n, y + 12 * m, 2)
+            n += 1
+        else:
+            n = 0
+            m += 1
+
+
+    return grid
+
 
 
 # get source data
@@ -146,6 +178,11 @@ if mode == "parametric":
 
     # draw graph
     grid = draw_formula(grid, data)
+
+    if data["displayformula"]:
+        grdes = "x(t) = " + data["graph"]["x"].lower()
+        grdes += "\ny(t) = " + data["graph"]["y"].lower()
+        grid = add_text(grid, grdes, 7, 4)
 
     # show image
     gen_image(grid, "RGB", "out/main.png")
