@@ -43,14 +43,14 @@ def draw_formula (grid, data):
             gx -= data["window"]["x"]["min"]
             gx /= (data["window"]["x"]["max"] - data["window"]["x"]["min"])
             gx *= data["window"]["resolution"]["x"]
-            gx = int(floor(gx))
+            gx = int(round(gx, 0))
 
             gy = y
             gy -= data["window"]["y"]["min"]
             gy /= (data["window"]["y"]["max"] - data["window"]["y"]["min"])
             gy *= data["window"]["resolution"]["y"]
             gy = data["window"]["resolution"]["y"] - gy
-            gy = int(floor(gy))
+            gy = int(round(gy, 0))
 
             # project the point on the grid
             dotsize = data["dotsize"]
