@@ -82,11 +82,13 @@ def add_image (grid, filename, name, color, x, y, scale = 1):
 
 def add_text (grid, text, x, y):
 
+    scale = int(ceil(max([len(grid), len(grid[0])]) * 0.005))
+
     n = 0
     m = 0
     for t in text:
         if t != "\n":
-            grid = add_image (grid, "text", t, (0,0,0), x + 8 * n, y + 12 * m, 2)
+            grid = add_image(grid, "text", t, (0,0,0), x + 4 * n * scale, y + 6 * m * scale, scale)
             n += 1
         else:
             n = 0
