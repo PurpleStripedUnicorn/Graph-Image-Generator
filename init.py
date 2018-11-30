@@ -33,8 +33,13 @@ def draw_formula (grid, data):
         x = parse_formula(data["graph"]["x"], t)
         y = parse_formula(data["graph"]["y"], t)
 
-        x_valid = x < data["window"]["x"]["max"] and x > data["window"]["x"]["min"]
-        y_valid = y < data["window"]["y"]["max"] and y > data["window"]["y"]["min"]
+        x_min = data["window"]["x"]["min"]
+        y_min = data["window"]["y"]["min"]
+        x_max = data["window"]["x"]["max"]
+        y_max = data["window"]["y"]["max"]
+
+        x_valid = x < x_max and x > x_min
+        y_valid = y < y_max and y > y_min
 
         if x_valid and y_valid:
 
@@ -65,6 +70,9 @@ def draw_formula (grid, data):
 
 def add_image (grid, filename, name, color, x, y, scale = 1):
 
+    x_max = len(grid[0]) - 1
+    y_max = len(grid) - 1
+
     # get image data as array
     ndata = getjson("imagedata/" + filename + ".json")[name]
 
@@ -73,9 +81,12 @@ def add_image (grid, filename, name, color, x, y, scale = 1):
             if ndata[j][i] == 1:
                 for ii in range(0, scale):
                     for jj in range(0, scale):
+
+                        # check if point is a valid point on the grid
                         xc = i * scale + x + ii
                         yc = j * scale + y + jj
-                        if xc < len(grid[0]) and xc >= 0 and yc < len(grid) and yc >= 0:
+
+                        if xc <= x_max and xc >= 0 and yc <= y_max and yc >= 0:
                             grid[yc][xc] = color
 
     return grid
@@ -88,7 +99,10 @@ def add_text (grid, text, x, y):
     m = 0
     for t in text:
         if t != "\n":
-            grid = add_image(grid, "text", t, (0,0,0), x + 4 * n * scale, y + 6 * m * scale, scale)
+            xspacing = x + 4 * n * scale
+            yspacing = y + 6 * m * scale
+            color = (0, 0, 0)
+            grid = add_image(grid, "text", t, color, xspacing, yspacing, scale)
             n += 1
         else:
             n = 0
@@ -147,7 +161,8 @@ if mode == "parametric":
     # then, see draw the lines on the axis
 
     multiplier = 10 ** floor(log10(xsize) - 0.6)
-    first = data["window"]["x"]["min"] - (data["window"]["x"]["min"] % multiplier)
+    first = data["window"]["x"]["min"]
+    first -= data["window"]["x"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["x"]["max"]):
         idata = copy.deepcopy(data)
@@ -164,7 +179,8 @@ if mode == "parametric":
     # draw size indicators on x-axis
     # first, check which indicators should be shown
     multiplier = 10 ** floor(log10(ysize) - 0.6)
-    first = data["window"]["y"]["min"] - (data["window"]["y"]["min"] % multiplier)
+    first = data["window"]["y"]["min"]
+    first -= data["window"]["y"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["y"]["max"]):
         idata = copy.deepcopy(data)
