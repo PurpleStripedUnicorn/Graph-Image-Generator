@@ -204,7 +204,7 @@ if mode == "parametric":
         "t": {
             "min": data["window"]["x"]["min"],
             "max": data["window"]["x"]["max"],
-            "step": 0.01
+            "step": 0.001
         }
     })
 
@@ -217,7 +217,7 @@ if mode == "parametric":
         "t": {
             "min": data["window"]["y"]["min"],
             "max": data["window"]["y"]["max"],
-            "step": 0.01
+            "step": 0.001
         }
     })
 
