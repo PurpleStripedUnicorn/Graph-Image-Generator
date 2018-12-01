@@ -196,7 +196,7 @@ if mode == "parametric":
     ysize = data["window"]["y"]["max"] - data["window"]["y"]["min"]
 
     # draw x-axis
-    data["graph"].append({
+    data["graph"].insert(0, {
         "x": "t",
         "y": "0",
         "color": data["colors"]["axis"],
@@ -209,7 +209,7 @@ if mode == "parametric":
     })
 
     # draw y-axis
-    data["graph"].append({
+    data["graph"].insert(0, {
         "x": "0",
         "y": "t",
         "color": data["colors"]["axis"],
@@ -230,7 +230,7 @@ if mode == "parametric":
     first -= data["window"]["x"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["x"]["max"]):
-        data["graph"].append({
+        data["graph"].insert(0, {
             "x": str(cur),
             "y": "t",
             "color": data["colors"]["axis"],
@@ -251,7 +251,7 @@ if mode == "parametric":
     first -= data["window"]["y"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["y"]["max"]):
-        data["graph"].append({
+        data["graph"].insert(0, {
             "x": "t",
             "y": str(cur),
             "color": data["colors"]["axis"],
