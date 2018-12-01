@@ -67,17 +67,20 @@ def draw_formula (grid, data):
         max_y = len(grid) - 1
 
         # project the point on the grid
-        # first, get the dotsize, projected as square on the image
+        # first, get the dotsize, projected as a circle on the image
         dotsize = data["dotsize"]
         # go through every point that needs to be painted on the grid
         # first, go through x values
-        for i in range(gx - dotsize, gx + dotsize + 1):
+        for i in range(gx - dotsize - 1, gx + dotsize + 2):
             # go through y values
-            for j in range(gy - dotsize, gy + dotsize + 1):
+            for j in range(gy - dotsize - 1, gy + dotsize + 2):
                 # check if point is within range of allowed values
                 if j >= 0 and j <= max_y and i >= 0 and i <= max_x:
-                    # paint pixel on image
-                    grid[j][i] = line_color
+                    # check if point is within circle radius of source point
+                    val = (i - gx) ** 2 + (j - gy) ** 2
+                    if val <= dotsize ** 2:
+                        # paint pixel on image
+                        grid[j][i] = line_color
 
         # go check next value of t
         t += data["window"]["t"]["step"]

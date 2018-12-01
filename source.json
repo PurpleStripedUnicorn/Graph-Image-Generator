@@ -20,7 +20,7 @@
         "axis": [150, 150, 150]
     },
 
-    "dotsize": 1,
+    "dotsize": 2,
     "axissize": 0,
 
     "displayformula": true
