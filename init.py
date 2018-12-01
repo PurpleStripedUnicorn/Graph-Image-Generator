@@ -71,9 +71,9 @@ def draw_formula (grid, data):
         dotsize = data["dotsize"]
         # go through every point that needs to be painted on the grid
         # first, go through x values
-        for i in range(gx - dotsize - 1, gx + dotsize + 2):
+        for i in range(floor(gx - dotsize - 1), ceil(gx + dotsize + 2)):
             # go through y values
-            for j in range(gy - dotsize - 1, gy + dotsize + 2):
+            for j in range(floor(gy - dotsize - 1), ceil(gy + dotsize + 2)):
                 # check if point is within range of allowed values
                 if j >= 0 and j <= max_y and i >= 0 and i <= max_x:
                     # check if point is within circle radius of source point
