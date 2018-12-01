@@ -3,17 +3,23 @@
     "type": "parametric",
 
     "window": {
-        "x": { "min": -1.7, "max": 1.7 },
-        "y": { "min": -1.7, "max": 1.7 },
+        "x": { "min": -5, "max": 5 },
+        "y": { "min": -5, "max": 5 },
         "t": { "min": -10, "max": 10, "step": 0.002 },
-        "resolution": { "x": 1200, "y": 1200 }
+        "resolution": { "x": 800, "y": 800 }
     },
 
     "graph": [
         {
-            "x": "0.5 * cos(t) + 0.7 * cos(t*10)",
-            "y": "0.5 * sin(t) + 0.7 * sin(t*10)",
+            "x": "t",
+            "y": "sin(t)",
             "color": [0, 0, 255],
+            "dotsize": 3
+        },
+        {
+            "x": "t",
+            "y": "cos(t)",
+            "color": [255, 0, 0],
             "dotsize": 3
         }
     ],
