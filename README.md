@@ -4,6 +4,6 @@ This code can generate a graph as an image based on arguments given in the "sour
 
 ## Examples
 
-![Graph Image](https://raw.githubusercontent.com/PurpleStripedUnicorn/Graph-Image-Generator/master/examples/007.png)
+![Graph Image](https://raw.githubusercontent.com/PurpleStripedUnicorn/Graph-Image-Generator/master/examples/007.png =180px)
 
-![Graph Image](https://raw.githubusercontent.com/PurpleStripedUnicorn/Graph-Image-Generator/master/examples/006.png)
+![Graph Image](https://raw.githubusercontent.com/PurpleStripedUnicorn/Graph-Image-Generator/master/examples/006.png =180px)
