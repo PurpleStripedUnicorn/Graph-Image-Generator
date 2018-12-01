@@ -40,9 +40,20 @@ def draw_formula (grid, data):
             formula["color"][1],
             formula["color"][2])
 
+        # get the minimum and maximum values of "t"
+        # first, check if they are overwritten by the formula
+        if "t" in formula:
+            t_min = formula["t"]["min"]
+            t_max = formula["t"]["max"]
+            t_step = formula["t"]["step"]
+        else:
+            t_min = data["window"]["t"]["min"]
+            t_max = data["window"]["t"]["max"]
+            t_step = data["window"]["t"]["step"]
+
         # go through every t value in range with given intervals
-        t = data["window"]["t"]["min"]
-        while t <= data["window"]["t"]["max"]:
+        t = t_min
+        while t <= t_max:
 
             # get coordinates of the point
             x = parse_formula(formula["x"], t)
@@ -71,7 +82,7 @@ def draw_formula (grid, data):
 
             # project the point on the grid
             # first, get the dotsize, projected as a circle on the image
-            dotsize = data["dotsize"]
+            dotsize = formula["dotsize"]
             # go through every point that needs to be painted on the grid
             # first, go through x values
             for i in range(floor(gx - dotsize - 1), ceil(gx + dotsize + 2)):
@@ -86,7 +97,7 @@ def draw_formula (grid, data):
                             grid[j][i] = line_color
 
             # go check next value of t
-            t += data["window"]["t"]["step"]
+            t += t_step
 
     # return grid as output
     return grid
@@ -177,34 +188,38 @@ mode = data["type"]
 # code for parametric style
 if mode == "parametric":
 
+    # check if there is only 1 formula added, to allow formula display
+    if len(data["graph"]) != 1:
+        data["displayformula"] = False
+
     xsize = data["window"]["x"]["max"] - data["window"]["x"]["min"]
     ysize = data["window"]["y"]["max"] - data["window"]["y"]["min"]
 
     # draw x-axis
-    xdata = copy.deepcopy(data)
-    xdata["window"]["t"]["min"] = xdata["window"]["x"]["min"]
-    xdata["window"]["t"]["max"] = xdata["window"]["x"]["max"]
-    xdata["window"]["t"]["step"] = 0.001 * xsize
-    xdata["graph"] = [{
+    data["graph"].append({
         "x": "t",
         "y": "0",
-        "color": xdata["colors"]["axis"]
-    }]
-    xdata["dotsize"] = xdata["axissize"]
-    grid = draw_formula(grid, xdata)
+        "color": data["colors"]["axis"],
+        "dotsize": 0.5,
+        "t": {
+            "min": data["window"]["x"]["min"],
+            "max": data["window"]["x"]["max"],
+            "step": 0.01
+        }
+    })
 
     # draw y-axis
-    ydata = copy.deepcopy(data)
-    ydata["window"]["t"]["min"] = ydata["window"]["y"]["min"]
-    ydata["window"]["t"]["max"] = ydata["window"]["y"]["max"]
-    ydata["window"]["t"]["step"] = 0.001 * ysize
-    ydata["graph"] = [{
+    data["graph"].append({
         "x": "0",
         "y": "t",
-        "color": ydata["colors"]["axis"]
-    }]
-    ydata["dotsize"] = ydata["axissize"]
-    grid = draw_formula(grid, ydata)
+        "color": data["colors"]["axis"],
+        "dotsize": 0.5,
+        "t": {
+            "min": data["window"]["y"]["min"],
+            "max": data["window"]["y"]["max"],
+            "step": 0.01
+        }
+    })
 
     # draw size indicators on x-axis
     # first, check which indicators should be shown
@@ -215,17 +230,18 @@ if mode == "parametric":
     first -= data["window"]["x"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["x"]["max"]):
-        idata = copy.deepcopy(data)
-        idata["window"]["t"]["min"] = -0.01 * ysize
-        idata["window"]["t"]["max"] = 0.01 * ysize
-        idata["window"]["t"]["step"] = 0.001 * ysize
-        idata["graph"] = [{
+        data["graph"].append({
             "x": str(cur),
             "y": "t",
-            "color": idata["colors"]["axis"]
-        }]
-        idata["dotsize"] = idata["axissize"]
-        grid = draw_formula(grid, idata)
+            "color": data["colors"]["axis"],
+            "dotsize": 0.5,
+            # overwrite default window "t" properties
+            "t": {
+                "min": -0.01 * ysize,
+                "max": 0.01 * ysize,
+                "step": 0.001 * ysize
+            }
+        })
         cur += multiplier
 
     # draw size indicators on x-axis
@@ -235,17 +251,18 @@ if mode == "parametric":
     first -= data["window"]["y"]["min"] % multiplier
     cur = first
     while (cur <= data["window"]["y"]["max"]):
-        idata = copy.deepcopy(data)
-        idata["window"]["t"]["min"] = -0.01 * xsize
-        idata["window"]["t"]["max"] = 0.01 * xsize
-        idata["window"]["t"]["step"] = 0.001 * xsize
-        idata["graph"] = [{
+        data["graph"].append({
             "x": "t",
             "y": str(cur),
-            "color": idata["colors"]["axis"]
-        }]
-        idata["dotsize"] = idata["axissize"]
-        grid = draw_formula(grid, idata)
+            "color": data["colors"]["axis"],
+            "dotsize": 0.5,
+            # overwrite default window "t" properties
+            "t": {
+                "min": -0.01 * xsize,
+                "max": 0.01 * xsize,
+                "step": 0.001 * xsize
+            }
+        })
         cur += multiplier
 
     # draw graphs
