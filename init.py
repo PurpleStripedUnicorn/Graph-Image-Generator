@@ -28,62 +28,65 @@ def parse_formula (formula, parameter):
     # return the value
     return ev
 
-# draw a given formaula (included in data) on a grid
-# return grid with formula draw on it
+# draw a given formaula(s) (included in data) on a grid
+# return grid with formula(s) draw on it
 def draw_formula (grid, data):
 
-    # convert given line color to proper object type
-    line_color = (data["colors"]["line"][0],
-        data["colors"]["line"][1],
-        data["colors"]["line"][2])
+    # go through every formula given and performs same actions
+    for formula in data["graph"]:
 
-    # go through every t value in range with given intervals
-    t = data["window"]["t"]["min"]
-    while t <= data["window"]["t"]["max"]:
+        # convert given line color to proper object type
+        line_color = (formula["color"][0],
+            formula["color"][1],
+            formula["color"][2])
 
-        # get coordinates of the point
-        x = parse_formula(data["graph"]["x"], t)
-        y = parse_formula(data["graph"]["y"], t)
+        # go through every t value in range with given intervals
+        t = data["window"]["t"]["min"]
+        while t <= data["window"]["t"]["max"]:
 
-        # convert coords to point coords on the grid
+            # get coordinates of the point
+            x = parse_formula(formula["x"], t)
+            y = parse_formula(formula["y"], t)
 
-        # convert x-coord, round to nearest whole integer point
-        gx = x
-        gx -= data["window"]["x"]["min"]
-        gx /= (data["window"]["x"]["max"] - data["window"]["x"]["min"])
-        gx *= data["window"]["resolution"]["x"]
-        gx = int(round(gx, 0))
+            # convert coords to point coords on the grid
 
-        # convert y-coord, round to nearest whole integer point
-        gy = y
-        gy -= data["window"]["y"]["min"]
-        gy /= (data["window"]["y"]["max"] - data["window"]["y"]["min"])
-        gy *= data["window"]["resolution"]["y"]
-        gy = data["window"]["resolution"]["y"] - gy
-        gy = int(round(gy, 0))
+            # convert x-coord, round to nearest whole integer point
+            gx = x
+            gx -= data["window"]["x"]["min"]
+            gx /= (data["window"]["x"]["max"] - data["window"]["x"]["min"])
+            gx *= data["window"]["resolution"]["x"]
+            gx = int(round(gx, 0))
 
-        # get the maximum values of x and y as grid point coords
-        max_x = len(grid[0]) - 1
-        max_y = len(grid) - 1
+            # convert y-coord, round to nearest whole integer point
+            gy = y
+            gy -= data["window"]["y"]["min"]
+            gy /= (data["window"]["y"]["max"] - data["window"]["y"]["min"])
+            gy *= data["window"]["resolution"]["y"]
+            gy = data["window"]["resolution"]["y"] - gy
+            gy = int(round(gy, 0))
 
-        # project the point on the grid
-        # first, get the dotsize, projected as a circle on the image
-        dotsize = data["dotsize"]
-        # go through every point that needs to be painted on the grid
-        # first, go through x values
-        for i in range(floor(gx - dotsize - 1), ceil(gx + dotsize + 2)):
-            # go through y values
-            for j in range(floor(gy - dotsize - 1), ceil(gy + dotsize + 2)):
-                # check if point is within range of allowed values
-                if j >= 0 and j <= max_y and i >= 0 and i <= max_x:
-                    # check if point is within circle radius of source point
-                    val = (i - gx) ** 2 + (j - gy) ** 2
-                    if val <= dotsize ** 2:
-                        # paint pixel on image
-                        grid[j][i] = line_color
+            # get the maximum values of x and y as grid point coords
+            max_x = len(grid[0]) - 1
+            max_y = len(grid) - 1
 
-        # go check next value of t
-        t += data["window"]["t"]["step"]
+            # project the point on the grid
+            # first, get the dotsize, projected as a circle on the image
+            dotsize = data["dotsize"]
+            # go through every point that needs to be painted on the grid
+            # first, go through x values
+            for i in range(floor(gx - dotsize - 1), ceil(gx + dotsize + 2)):
+                # go through y values
+                for j in range(floor(gy - dotsize - 1), ceil(gy + dotsize + 2)):
+                    # check if point is within range of allowed values
+                    if j >= 0 and j <= max_y and i >= 0 and i <= max_x:
+                        # check if point is within circle radius of source point
+                        val = (i - gx) ** 2 + (j - gy) ** 2
+                        if val <= dotsize ** 2:
+                            # paint pixel on image
+                            grid[j][i] = line_color
+
+            # go check next value of t
+            t += data["window"]["t"]["step"]
 
     # return grid as output
     return grid
@@ -182,9 +185,11 @@ if mode == "parametric":
     xdata["window"]["t"]["min"] = xdata["window"]["x"]["min"]
     xdata["window"]["t"]["max"] = xdata["window"]["x"]["max"]
     xdata["window"]["t"]["step"] = 0.001 * xsize
-    xdata["graph"]["x"] = "t"
-    xdata["graph"]["y"] = "0"
-    xdata["colors"]["line"] = xdata["colors"]["axis"]
+    xdata["graph"] = [{
+        "x": "t",
+        "y": "0",
+        "color": xdata["colors"]["axis"]
+    }]
     xdata["dotsize"] = xdata["axissize"]
     grid = draw_formula(grid, xdata)
 
@@ -193,9 +198,11 @@ if mode == "parametric":
     ydata["window"]["t"]["min"] = ydata["window"]["y"]["min"]
     ydata["window"]["t"]["max"] = ydata["window"]["y"]["max"]
     ydata["window"]["t"]["step"] = 0.001 * ysize
-    ydata["graph"]["x"] = "0"
-    ydata["graph"]["y"] = "t"
-    ydata["colors"]["line"] = ydata["colors"]["axis"]
+    ydata["graph"] = [{
+        "x": "0",
+        "y": "t",
+        "color": ydata["colors"]["axis"]
+    }]
     ydata["dotsize"] = ydata["axissize"]
     grid = draw_formula(grid, ydata)
 
@@ -212,9 +219,11 @@ if mode == "parametric":
         idata["window"]["t"]["min"] = -0.01 * ysize
         idata["window"]["t"]["max"] = 0.01 * ysize
         idata["window"]["t"]["step"] = 0.001 * ysize
-        idata["graph"]["x"] = str(cur)
-        idata["graph"]["y"] = "t"
-        idata["colors"]["line"] = idata["colors"]["axis"]
+        idata["graph"] = [{
+            "x": str(cur),
+            "y": "t",
+            "color": idata["colors"]["axis"]
+        }]
         idata["dotsize"] = idata["axissize"]
         grid = draw_formula(grid, idata)
         cur += multiplier
@@ -230,21 +239,23 @@ if mode == "parametric":
         idata["window"]["t"]["min"] = -0.01 * xsize
         idata["window"]["t"]["max"] = 0.01 * xsize
         idata["window"]["t"]["step"] = 0.001 * xsize
-        idata["graph"]["x"] = "t"
-        idata["graph"]["y"] = str(cur)
-        idata["colors"]["line"] = idata["colors"]["axis"]
+        idata["graph"] = [{
+            "x": "t",
+            "y": str(cur),
+            "color": idata["colors"]["axis"]
+        }]
         idata["dotsize"] = idata["axissize"]
         grid = draw_formula(grid, idata)
         cur += multiplier
 
-    # draw graph
+    # draw graphs
     grid = draw_formula(grid, data)
 
     # check if the formula should be shown on the output image
     if data["displayformula"]:
         # prepare text to display
-        grdes = "x(t) = " + data["graph"]["x"].lower()
-        grdes += "\ny(t) = " + data["graph"]["y"].lower()
+        grdes = "x(t) = " + data["graph"][0]["x"].lower()
+        grdes += "\ny(t) = " + data["graph"][0]["y"].lower()
         # add text to image
         grid = add_text(grid, grdes, 7, 4)
 
