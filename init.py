@@ -192,6 +192,11 @@ if mode == "parametric":
     if len(data["graph"]) != 1:
         data["displayformula"] = False
 
+    # prepare text to display
+    # this is if the formula should be displayed
+    grdes = "x(t) = " + data["graph"][0]["x"].lower()
+    grdes += "\ny(t) = " + data["graph"][0]["y"].lower()
+
     xsize = data["window"]["x"]["max"] - data["window"]["x"]["min"]
     ysize = data["window"]["y"]["max"] - data["window"]["y"]["min"]
 
@@ -270,9 +275,6 @@ if mode == "parametric":
 
     # check if the formula should be shown on the output image
     if data["displayformula"]:
-        # prepare text to display
-        grdes = "x(t) = " + data["graph"][0]["x"].lower()
-        grdes += "\ny(t) = " + data["graph"][0]["y"].lower()
         # add text to image
         grid = add_text(grid, grdes, 7, 4)
 
