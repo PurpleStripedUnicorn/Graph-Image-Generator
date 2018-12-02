@@ -12,15 +12,15 @@
     "graph": [
         {
             "x": "t",
-            "y": "sin(t)",
+            "y": "e ** t",
             "color": [0, 0, 255],
-            "dotsize": 3
+            "dotsize": 1.5
         },
         {
             "x": "t",
-            "y": "cos(t)",
+            "y": "t + 1",
             "color": [255, 0, 0],
-            "dotsize": 3
+            "dotsize": 1.5
         }
     ],
 
